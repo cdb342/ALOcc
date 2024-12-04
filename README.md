@@ -1,7 +1,7 @@
 <div id="top" align="center">
 
     
-### **ALOcc:** *Adaptive Lifting-based 3D Semantic Occupancy and Cost Volume-based Flow Prediction*
+## **ALOcc:** *Adaptive Lifting-based 3D Semantic Occupancy and Cost Volume-based Flow Prediction*
 
 
 [![arXiv](https://img.shields.io/badge/arXiv-2411.07725-b31b1b.svg)](https://arxiv.org/abs/2411.07725)
@@ -20,8 +20,8 @@
 
 ## Main Results
 
+- ### 3D semantic occupancy prediction performance on Occ3D (training w/ camera visible mask).
 <table>
-<caption><b>3D semantic occupancy prediction performance on Occ3D (training w/ camera visible mask).</b></caption>
   <thead>
     <tr>
       <th align="left">Model</th>
@@ -60,9 +60,8 @@
   </tbody>
 </table>
 
-
+- ### 3D semantic occupancy prediction performance on Occ3D (training w/o camera visible mask).
 <table>
-  <caption><b>3D semantic occupancy prediction performance on Occ3D (training w/o camera visible mask).</b></caption>
   <thead>
     <tr>
       <th align="left">Method</th>
@@ -105,9 +104,8 @@
   </tbody>
 </table>
 
-
+- ### 3D semantic occupancy and flow prediction performance on OpenOcc.
 <table>
-  <caption><b>3D semantic occupancy and flow prediction performance on OpenOcc.</b></caption>
   <thead>
     <tr>
       <th align="left">Method</th>
