@@ -20,7 +20,7 @@
 
 ## Main Results
 
-- ### 3D semantic occupancy prediction performance on Occ3D (training w/ camera visible mask).
+- #### 3D semantic occupancy prediction performance on Occ3D (training w/ camera visible mask).
 <table>
   <thead>
     <tr>
@@ -60,7 +60,7 @@
   </tbody>
 </table>
 
-- ### 3D semantic occupancy prediction performance on Occ3D (training w/o camera visible mask).
+- #### 3D semantic occupancy prediction performance on Occ3D (training w/o camera visible mask).
 <table>
   <thead>
     <tr>
@@ -104,7 +104,7 @@
   </tbody>
 </table>
 
-- ### 3D semantic occupancy and flow prediction performance on OpenOcc.
+- #### 3D semantic occupancy and flow prediction performance on OpenOcc.
 <table>
   <thead>
     <tr>
