@@ -10,7 +10,7 @@
 </div>
 
 
-ALOcc is a powerful vision-based 3D semantic occupancy and flow prediction tool, primarily designed for applications like autonomous driving. The project focuses on improving 3D occupancy prediction and flow estimation.
+🚗 ALOcc is a powerful vision-based 3D semantic occupancy and flow prediction tool, primarily designed for applications like autonomous driving. The project focuses on improving 3D occupancy prediction and flow estimation.
 
 <p align="center">
   <img src="assets/1.png" width="38%" style="margin-right: 10px;">
