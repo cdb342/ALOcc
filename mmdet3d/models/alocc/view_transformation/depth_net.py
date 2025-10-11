@@ -20,7 +20,6 @@ from mmcv.cnn import xavier_init, constant_init
 import time
 from itertools import product
 from .cal_depth2occ import cal_depth2occ
-from ..modules.temporal_fusion import GeometryHistoryFusion
 
 z=list(product([-1,0,1],[-1,0,1]))
 
@@ -272,20 +271,8 @@ class CM_DepthNet(BaseModule):
                 use_context_post_ln=False,
                 geometry_denoise=False,
                 geometry_denoise_rate=1.,
-                ####################
-                # GDFusion geometry his fusion
-                geometry_his_fusion=False,
-                geometry_his_fusion_with_gt=False,
-                geometry_his_fusion_after_sup=True,
-                depth_his_sup_w_his=False,
-                depth_conv_head_split=False,
-                per_pixel_weight=False,
-                gate_net_with_his=False, 
-                gate_net_mlp=False,
-                ####################
                 depth_gt=False,
                 depth_sigmoid=False,
-                geometry_group=False,
                  ):
         super(CM_DepthNet, self).__init__()
         self.fp16_enable=False
@@ -317,63 +304,15 @@ class CM_DepthNet(BaseModule):
             self.use_context_post_ln=use_context_post_ln
             if use_context_post_ln:
                 self.context_post_ln=nn.LayerNorm(context_channels)
-        self.geometry_group=geometry_group
-        
-        if geometry_group:
-            depth_channels=depth_channels*geometry_group
+
         depth_conv_input_channels = mid_channels
         downsample_net = None
         self.geometry_denoise=geometry_denoise
         self.geometry_denoise_rate=geometry_denoise_rate
 
-        self.geometry_his_fusion=geometry_his_fusion
-        self.geometry_his_fusion_with_gt=geometry_his_fusion_with_gt
-        self.geometry_his_fusion_after_sup=geometry_his_fusion_after_sup
-        self.depth_conv_head_split=depth_conv_head_split
         self.depth_gt=depth_gt
         
-        if geometry_his_fusion:
-            self.depth_his_fusion_post_layer=GeometryHistoryFusion(depth_channels,grid_config,input_size=input_size,
-                downsample=downsample,forward_post=True,context_channel=mid_channels,depth_his_sup_w_his=depth_his_sup_w_his,
-                per_pixel_weight=per_pixel_weight,gate_net_with_his=gate_net_with_his)
-
-            if gate_net_with_his:
-                if gate_net_mlp:
-                    self.gate_net=nn.Sequential(
-                    nn.Conv2d(
-                        depth_channels*2, depth_channels, kernel_size=1, stride=1, padding=0),
-                    nn.ReLU(),
-                    nn.Conv2d(
-                        depth_channels, 1, kernel_size=1, stride=1, padding=0),
-                    nn.Sigmoid()
-                    )
-                else:
-                    self.gate_net=nn.Sequential(
-                        nn.Conv2d(
-                            depth_channels*2, 1, kernel_size=1, stride=1, padding=0),
-                        
-                        nn.Sigmoid()
-                        )
-            else:
-                if gate_net_mlp:
-                    self.gate_net=nn.Sequential(
-                    nn.Conv2d(
-                        mid_channels, mid_channels//2, kernel_size=1, stride=1, padding=0),
-                    nn.ReLU(),
-                    nn.Conv2d(
-                        mid_channels//2, 1, kernel_size=1, stride=1, padding=0),
-                    nn.Sigmoid()
-                    )
-                else:
-                    self.gate_net=nn.Sequential(
-                            nn.Conv2d(
-                                mid_channels, 1, kernel_size=1, stride=1, padding=0),
-                            
-                            nn.Sigmoid()
-                            )
-
-            self.gate_net_with_his=gate_net_with_his
-            
+ 
         #################
         self.depth2occ_intra=depth2occ_intra
         self.depth2occ_intra_post_norm=depth2occ_intra_post_norm
@@ -417,11 +356,7 @@ class CM_DepthNet(BaseModule):
         self.depth_stereo=stereo
         if stereo:
             cost_volumn_channels=depth_channels
-            
-            if geometry_group:
-                cost_volumn_channels=cost_volumn_channels//geometry_group
-            
-            
+
             depth_conv_input_channels += cost_volumn_channels
             downsample_net = nn.Conv2d(depth_conv_input_channels,
                                     mid_channels, 1, 1, 0)
@@ -461,38 +396,22 @@ class CM_DepthNet(BaseModule):
                         groups=4,
                         im2col_step=128,
                     )))
-        if not depth_conv_head_split:
-            depth_conv_list.append(
-                nn.Conv2d(
-                    mid_channels,
-                    depth_channels,
-                    kernel_size=1,
-                    stride=1,
-                    padding=0))
-        else:
-            self.depth_head=nn.Conv2d(
-                    mid_channels,
-                    depth_channels,
-                    kernel_size=1,
-                    stride=1,
-                    padding=0)
-            self.depth_head2=nn.Conv2d(
-                    mid_channels,
-                    depth_channels,
-                    kernel_size=1,
-                    stride=1,
-                    padding=0)
+                    
+        depth_conv_list.append(
+            nn.Conv2d(
+                mid_channels,
+                depth_channels,
+                kernel_size=1,
+                stride=1,
+                padding=0))
+
         self.depth_conv = nn.Sequential(*depth_conv_list)
 
         ##########################################
         if self.soft_filling_with_offset:
             
             offset_channel=depth_channels
-            
-            if geometry_group:
-                offset_channel=offset_channel//geometry_group
-            
-            
+
             self.offset_conv = nn.Conv2d(
                     context_channels,
                     offset_channel*3,
@@ -505,8 +424,7 @@ class CM_DepthNet(BaseModule):
 
         if self.depth2occ_intra:
             occ_channels=self.length
-            if geometry_group:
-                occ_channels=occ_channels*geometry_group
+
             occ_conv_list = [BasicBlock(depth_conv_input_channels, mid_channels,
                                         downsample=downsample_net),
                             BasicBlock(mid_channels, mid_channels),
@@ -710,15 +628,9 @@ class CM_DepthNet(BaseModule):
         if self.depth2occ_intra:
     
             depth_feat = self.depth_conv(depth_)
-            if self.depth_conv_head_split:
-                depth=self.depth_head(depth_feat)
-            else:
-                depth=depth_feat
+            depth=depth_feat
 
             occ_weight = self.occ_conv(depth_.clone())
-            if self.geometry_group:
-
-                occ_weight=occ_weight.reshape(occ_weight.shape[0]*self.geometry_group,-1,*occ_weight.shape[2:])
 
             # occ_weight=occ_weight.view(B, N, self.length, H, W)
             occ_weight=(occ_weight/self.occlude_tau).sigmoid()
@@ -726,21 +638,14 @@ class CM_DepthNet(BaseModule):
         else:
             if self.with_cp and depth_.requires_grad:
                 depth_feat = cp.checkpoint(self.depth_conv, depth_)
-                if self.depth_conv_head_split:
-                    depth = cp.checkpoint(self.depth_head, depth_feat)
-                else:
-                    depth=depth_feat
+                depth=depth_feat
             else:
                 depth_feat = self.depth_conv(depth_)
-                if self.depth_conv_head_split:
-                    depth=self.depth_head(depth_feat)
-                else:
-                    depth=depth_feat
+                depth=depth_feat
         
         if not self.train_depth_only:
             context = context.view(B, N,  self.context_channels, H, W)
-        if self.geometry_group:
-            N=N*self.geometry_group
+
         depth = depth.view(B, N, -1, H, W)
         
         
@@ -765,7 +670,7 @@ class CM_DepthNet(BaseModule):
             depth=depth_
             
         if self.depth2occ_intra:
-            if self.depth_gt and not self.geometry_his_fusion:
+            if self.depth_gt:
                 if not self.training:
                     kwargs['gt_depth']=kwargs['gt_depth'][0]
                 gt_depth=self.get_downsampled_gt_depth(kwargs['gt_depth'])
@@ -783,50 +688,7 @@ class CM_DepthNet(BaseModule):
             occ_weight=cal_depth2occ(occ_weight,depth_.reshape(B*N,-1, H, W))
             occ_weight=occ_weight.reshape(B,N,-1, H, W)
             
-        if self.geometry_his_fusion:
-            if self.depth2occ_intra:
-                depth=occ_weight
-            depth_for_fuse=self.depth_head2(depth_feat)
-            depth_for_fuse = depth_for_fuse.view(B, N, -1, H, W)
-
-            if self.geometry_his_fusion_with_gt:
-                if not self.training:
-                    kwargs['gt_depth']=kwargs['gt_depth'][0]
-                gt_depth=self.get_downsampled_gt_depth(kwargs['gt_depth'])
-                mask=gt_depth.max(1)[0]<=0
-
-                gt_depth[mask]=depth_for_fuse.permute(0,1,3,4,2).reshape(-1,depth_for_fuse.shape[2]).contiguous()[mask]
-                gt_depth=gt_depth.reshape(depth.shape[0],depth.shape[1],depth.shape[3],depth.shape[4],depth.shape[2]).permute(0,1,4,2,3).contiguous()
-                depth_fused=self.depth_his_fusion_post_layer.forward_post(depth_feat,depth_for_fuse,img_metas,stereo_metas,gt_depth)
-                gt_depth=gt_depth.permute(0,1,3,4,2).contiguous()
-                gt_depth=gt_depth.view(-1,gt_depth.shape[-1])
-            else:
-                depth_fused=self.depth_his_fusion_post_layer.forward_post(depth_feat,depth_for_fuse,img_metas,stereo_metas)
-            
-            depth_fused=depth_fused.softmax(2)
-
-            if self.gate_net_with_his:
-                gate_input=torch.cat((depth_fused.flatten(0,1),depth.flatten(0,1)),dim=1)
-            else:
-                gate_input=depth_feat
-                
-            
-            fuse_weight=self.gate_net(gate_input)
-            
-            fuse_weight=fuse_weight.view(B, N, -1, H, W)
-
-            if self.depth_gt:
-                
-                gt_depth[mask]=depth.permute(0,1,3,4,2).reshape(-1,depth.shape[2]).contiguous()[mask]
-                gt_depth=gt_depth.reshape(depth.shape[0],depth.shape[1],depth.shape[3],depth.shape[4],depth.shape[2]).permute(0,1,4,2,3).contiguous()
-                depth_fused=fuse_weight*depth_fused+(1-fuse_weight)*gt_depth
-            else:
-                depth_fused=fuse_weight*depth_fused+(1-fuse_weight)*depth
-            output['geometry']=depth_fused
-
-            if not self.geometry_his_fusion_after_sup:
-                output['depth_pred']=depth_fused
-        elif self.depth2occ_intra:
+        if self.depth2occ_intra:
             if self.depth2occ_intra_post_norm:
                 output['geometry']=occ_weight/occ_weight.sum(2,keepdim=True)
             else:

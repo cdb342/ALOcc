@@ -34,9 +34,7 @@ from .loading_kitti_occ import LoadSemKittiAnnotation
 # utils
 from .lidar2depth import CreateDepthFromLiDAR
 from .formating import OccDefaultFormatBundle3D
-from .loading_sparseocc import LoadMultiViewImageFromMultiSweeps,LoadOccGTFromFileSparseocc,BEVAug
-from .transforms_sparseocc import PadMultiViewImageSparseOcc, NormalizeMultiviewImage, PhotoMetricDistortionMultiViewImage
-from .loading_bevformer import LoadOccGTFromFileBEVFormer
+
 from .loading_waymo import LoadOccGTFromFileWaymo
 __all__ = [
     'ObjectSample', 'RandomFlip3D', 'ObjectNoise', 'GlobalRotScaleTrans',
@@ -52,20 +50,6 @@ __all__ = [
     'LoadPointsFromDict', 'MultiViewWrapper', 'RandomRotate',
     'RangeLimitedRandomCrop', 'PrepareImageInputs',
     'LoadAnnotationsBEVDepth', 'PointToMultiViewDepth','LoadVqGT',
-
-    # ######################
-    # 'LoadAnnotations3D_BEVDet', 'LoadAnnotationsBEVDepth_BEVDet',
-    #                   'LoadImageFromFileMono3D_BEVDet', 'LoadMultiViewImageFromFiles_BEVDet',
-    #                   'LoadPointsFromDict_BEVDet', 'LoadPointsFromFile_BEVDet',
-    #                   'LoadPointsFromMultiSweeps_BEVDet', 'NormalizePointsColor_BEVDet',
-    #                   'PointSegClassMapping_BEVDet', 'PointToMultiViewDepth_BEVDet',
-    #                   'PrepareImageInputs_BEVDet', 'LoadOccGTFromFile','PointToMultiViewDepth_occ'
-    # ######################
     'LoadMultiViewImageFromFiles_SemanticKitti','LoadSemKittiAnnotation','CreateDepthFromLiDAR',
-    'OccDefaultFormatBundle3D','LoadOccFlowGTFromFile'
-    ###################
-    'LoadMultiViewImageFromMultiSweeps','LoadOccGTFromFileSparseocc','BEVAug'
-     'PadMultiViewImageSparseOcc','NormalizeMultiviewImage', 'PhotoMetricDistortionMultiViewImage'
-     ###############
-     'LoadOccGTFromFileBEVFormer','LoadOccGTFromFileWaymo'
+    'OccDefaultFormatBundle3D','LoadOccFlowGTFromFile','LoadOccGTFromFileWaymo'
 ]

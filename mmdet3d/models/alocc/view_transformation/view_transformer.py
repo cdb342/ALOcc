@@ -49,7 +49,6 @@ class LSSViewTransformerFunction(BaseModule):
         accelerate=False,
         uniform=False,
         with_cp=False,
-        ################
         num_classes=19,
         soft_filling=False,
         collapse_z=False,
@@ -59,7 +58,6 @@ class LSSViewTransformerFunction(BaseModule):
         depth2occ_inter=False,
         torch_sparse_coor=False,
         depth_emb_dim=80,
-        geometry_group=False,
 
     ):
         super(LSSViewTransformerFunction, self).__init__()
@@ -82,7 +80,6 @@ class LSSViewTransformerFunction(BaseModule):
         self.out_channels = out_channels
         self.accelerate = accelerate
         self.initial_flag = True
-        ###########
         self.num_classes=num_classes
         self.soft_filling=soft_filling
         self.grid_map=self.gen_grid_map(grid_size=self.grid_size)
@@ -95,7 +92,6 @@ class LSSViewTransformerFunction(BaseModule):
         
         self.torch_sparse_coor=torch_sparse_coor
         self.depth_emb_dim=depth_emb_dim
-        self.geometry_group=geometry_group
     def gen_grid_map(self,grid_size):
         w,h,z=grid_size.long().tolist()  
        
@@ -459,19 +455,9 @@ class LSSViewTransformerFunction(BaseModule):
                     hidden_depth=torch.gather(geometry,2,hidden_idx).contiguous()
                     # import pdb;pdb.set_trace()
                     b,n,num_hidden,h,w=hidden_depth.shape
-                    if self.geometry_group:
-                        depth2occ_inter_weight=depth2occ_inter_weight.reshape(b//self.geometry_group,n,*depth2occ_inter_weight.shape[1:])
-                        depth2occ_inter_weight=depth2occ_inter_weight.unsqueeze(1)
-                        depth2occ_inter_weight=depth2occ_inter_weight.expand(-1,self.geometry_group,-1,-1,-1,-1,-1,-1)
-                        depth2occ_inter_weight=depth2occ_inter_weight.reshape(depth2occ_inter_weight.shape[0]*self.geometry_group,*depth2occ_inter_weight.shape[2:])
 
-                        depth2occ_inter_bias=depth2occ_inter_bias.reshape(b//self.geometry_group,n,*depth2occ_inter_bias.shape[1:])
-                        depth2occ_inter_bias=depth2occ_inter_bias.unsqueeze(1)
-                        depth2occ_inter_bias=depth2occ_inter_bias.expand(-1,self.geometry_group,-1,-1,-1,-1,-1,-1)
-                        depth2occ_inter_bias=depth2occ_inter_bias.reshape(depth2occ_inter_bias.shape[0]*self.geometry_group,*depth2occ_inter_bias.shape[2:])
-                    else:
-                        depth2occ_inter_weight=depth2occ_inter_weight.reshape(b,n,*depth2occ_inter_weight.shape[1:])
-                        depth2occ_inter_bias=depth2occ_inter_bias.reshape(b,n,*depth2occ_inter_bias.shape[1:])
+                    depth2occ_inter_weight=depth2occ_inter_weight.reshape(b,n,*depth2occ_inter_weight.shape[1:])
+                    depth2occ_inter_bias=depth2occ_inter_bias.reshape(b,n,*depth2occ_inter_bias.shape[1:])
                         
                     hidden_depth=hidden_depth.unsqueeze(2).unsqueeze(2)*depth2occ_inter_weight
                     
@@ -500,10 +486,7 @@ class LSSViewTransformerFunction(BaseModule):
             
             coor = ((coor - self.grid_lower_bound.to(coor)) /
                     self.grid_interval.to(coor))
-            if self.geometry_group:
-                coor=coor.unsqueeze(1)
-                coor=coor.expand(-1,self.geometry_group,-1,-1,-1,-1,-1)
-                coor=coor.reshape(coor.shape[0]*self.geometry_group,coor.shape[2],*coor.shape[3:])
+
             if self.soft_filling:
                 B,N,D,H,W=geometry.shape
 
@@ -525,18 +508,9 @@ class LSSViewTransformerFunction(BaseModule):
     def view_transform(self, cam_params, geometry, tran_feat,coor_offsets=None, **kwargs):
         if self.accelerate:
             self.pre_compute(cam_params)
-        if self.geometry_group:
-            geometry=geometry.reshape(geometry.shape[0],geometry.shape[1]//self.geometry_group,self.geometry_group,*geometry.shape[2:])
-            geometry=geometry.permute(0,2,1,3,4,5)
-            geometry=geometry.reshape(geometry.shape[0]*self.geometry_group,*geometry.shape[2:])
-            tran_feat=tran_feat.reshape(tran_feat.shape[0],tran_feat.shape[1],self.geometry_group,-1,*tran_feat.shape[3:])
-            tran_feat=tran_feat.permute(0,2,1,3,4,5)
-            tran_feat=tran_feat.reshape(tran_feat.shape[0]*self.geometry_group,*tran_feat.shape[2:])
-        
+
         bev_feat=self.view_transform_core(cam_params, geometry, tran_feat,coor_offsets=coor_offsets,**kwargs)
-            
-        if self.geometry_group:
-            bev_feat=bev_feat.reshape(cam_params[0].shape[0],-1,*bev_feat.shape[2:])
+
         if self.collapse_z:
             bev_feat = torch.cat(bev_feat.unbind(dim=2), 1)
         if self.occ_2d:

@@ -16,17 +16,17 @@ class FusionRateControlDepthHook(Hook):
 
     def set_temporal_flag(self, runner, flag):
         if is_parallel(runner.model.module):
-            if hasattr(runner.model.module.module,'depth_denoise_rate'):
-                runner.model.module.module.depth_denoise_rate=flag
-            if hasattr(runner.model.module.module.depth_net,'depth_denoise_rate'):
-                runner.model.module.module.depth_net.depth_denoise_rate=flag
+            if hasattr(runner.model.module.module,'geometry_denoise_rate'):
+                runner.model.module.module.geometry_denoise_rate=flag
+            if hasattr(runner.model.module.module.depth_net,'geometry_denoise_rate'):
+                runner.model.module.module.depth_net.geometry_denoise_rate=flag
             
             
         else:
-            if hasattr(runner.model.module,'depth_denoise_rate'):
-                runner.model.module.depth_denoise_rate = flag
-            if hasattr(runner.model.module.depth_net,'depth_denoise_rate'):
-                runner.model.module.depth_net.depth_denoise_rate=flag
+            if hasattr(runner.model.module,'geometry_denoise_rate'):
+                runner.model.module.geometry_denoise_rate = flag
+            if hasattr(runner.model.module.depth_net,'geometry_denoise_rate'):
+                runner.model.module.depth_net.geometry_denoise_rate=flag
 
     def before_train_iter(self, runner):
         curr_step = runner.iter

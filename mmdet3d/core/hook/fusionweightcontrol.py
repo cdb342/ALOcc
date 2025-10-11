@@ -17,16 +17,14 @@ class FusionRateControlHook(Hook):
 
     def set_temporal_flag(self, runner, flag):
         if is_parallel(runner.model.module):
-            runner.model.module.module.occ_gt_as_stereo_mix_rate=flag
-            if hasattr(runner.model.module.module,'maskformerocc_head'):
-                if runner.model.module.module.maskformerocc_head is not None:
-                    runner.model.module.module.maskformerocc_head.flow_gt_denoise_rate=flag
+            if hasattr(runner.model.module.module,'alocc_head'):
+                if runner.model.module.module.alocc_head is not None:
+                    runner.model.module.module.alocc_head.flow_gt_denoise_rate=flag
             # import pdb;pdb.set_trace()
         else:
-            runner.model.module.occ_gt_as_stereo_mix_rate = flag
-            if hasattr(runner.model.module,'maskformerocc_head'):
-                if runner.model.module.maskformerocc_head is not None:
-                    runner.model.module.maskformerocc_head.flow_gt_denoise_rate = flag
+            if hasattr(runner.model.module,'alocc_head'):
+                if runner.model.module.alocc_head is not None:
+                    runner.model.module.alocc_head.flow_gt_denoise_rate = flag
             
 
 

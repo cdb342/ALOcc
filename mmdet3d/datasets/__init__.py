@@ -8,7 +8,6 @@ from .kitti_mono_dataset import KittiMonoDataset
 from .lyft_dataset import LyftDataset
 from .nuscenes_dataset import NuScenesDataset#, NuscenesOccupancy
 from .nuscenes_mono_dataset import NuScenesMonoDataset
-from .nuscenes_occ_dataset_sparseocc import  NuSceneOcc_SparseOcc
 # yapf: disable
 from .pipelines import (AffineResize, BackgroundPointsFilter, GlobalAlignment,
                         GlobalRotScaleTrans, IndoorPatchPointSample,
@@ -32,8 +31,6 @@ from .waymo_dataset import WaymoDataset
 from .samplers import InfiniteGroupEachSampleInBatchSampler
 from .semantic_kitti_lss_dataset import CustomSemanticKITTILssDataset
 from .custom_3d_ori import Custom3DDatasetOri
-from .nuscenes_occ import NuSceneOcc
-from .nuscenes_occ_bevformer import NuSceneOccBEVFormer
 from .waymo_occ import WaymoDatasetOcc
 __all__ = [
     'KittiDataset', 'KittiMonoDataset', 'build_dataloader', 'DATASETS',
@@ -51,6 +48,6 @@ __all__ = [
     'RandomShiftScale', 'LoadPointsFromDict', 'PIPELINES',
     'RangeLimitedRandomCrop', 'RandomRotate', 'MultiViewWrapper',
     'NuScenesDatasetOccpancy' ,'CustomSemanticKITTILssDataset',
-    'Custom3DDatasetOri', 'NuSceneOcc','CustomNuScenesDataset', 'NuSceneOcc_SparseOcc',
+    'Custom3DDatasetOri', 'NuSceneOcc','CustomNuScenesDataset',
     'NuSceneOccBEVFormer','WaymoDatasetOcc'
 ]

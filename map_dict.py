@@ -19,6 +19,7 @@
 
 
 import torch
+import os
 
 # 输入原始文件路径和输出文件路径
 # ckpt_path = "/home/yc37439/code/alocc2/ww/gdfusion/alocc_3d_256x704_bevdet_preatrain_gt_depth_gdfusion/iter_96060_ema.pth"
@@ -46,8 +47,32 @@ import torch
 
 # ckpt_path='/home/yc37439/code/alocc2/work_dir/fbocc/iter_80040_ema.pth'
 
-ckpt_path='/home/yc37439/code/alocc2/work_dir/gdfusion/fbocc_gdfusion/iter_80040_ema.pth'
-out_path='/home/yc37439/code/alocc2/work_dir2/'+ckpt_path.split('/')[-2]+'.pth'
+# ckpt_path='/home/yc37439/code/alocc2/work_dir/gdfusion/fbocc_gdfusion/iter_80040_ema.pth'
+
+# ckpt_path='/home/yc37439/code/alocc2/work_dir/alocc/alocc_3d_256x704_bevdet_preatrain_wo_mask/iter_96060_ema.pth'
+
+# ckpt_path='/home/yc37439/code/alocc2/work_dir/alocc/alocc_2d_256x704_bevdet_preatrain_wo_mask/iter_96060_ema.pth'
+
+# ckpt_path='/home/yc37439/code/alocc2/work_dir/bevdetocc/iter_96060_ema.pth'
+
+# ckpt_path='/home/yc37439/code/alocc2/work_dir/causalocc/alocc_3d_256x704_bevdet_preatrain_causalocc_wo_his/epoch_24_ema.pth'
+
+# ckpt_path='/home/yc37439/code/alocc2/work_dir/alocc/ada_occ_2d_mini_256x704_bevdet_preatrain/iter_96060_ema.pth'
+
+# ckpt_path='/home/yc37439/code/alocc2/work_dir/alocc/ada_occ_2d_mini_256x704_bevdet_preatrain/iter_96060_ema.pth'
+
+# ckpt_path='/home/yc37439/code/alocc2/work_dir/alocc/aloccflow_2d_256x704_bevdet_preatrain/flow2d_iter_160100_ema.pth'
+# ckpt_path='/home/yc37439/code/alocc2/work_dir/alocc/aloccflow_3d_256x704_bevdet_preatrain/flow_3d_iter_160100_ema.pth'
+# ckpt_path='/home/yc37439/code/alocc2/work_dir/alocc/alocc_3d_900x1600_bevdet_preatrain_surroundocc/epoch_24_ema.pth'
+
+# ckpt_path='/home/yc37439/code/alocc2/work_dir/gdfusion/alocc_3d_900x1600_bevdet_preatrain_gdfusion_surroundocc/iter_96060_ema.pth'
+# ckpt_path='/home/yc37439/code/alocc2/work_dir/causalocc/bevdetocc_r50_256x704_bevdet_pretrain_causalocc_wo_his/epoch_24_ema.pth'
+ckpt_path='/home/yc37439/code/alocc2/work_dir/gdfusion/bevdetocc_r50_256x704_bevdet_pretrain_gdfusion/iter_96060_ema.pth'
+
+out_dir='/home/yc37439/code/alocc2/work_dir2/'+ckpt_path.split('/')[6]
+if not os.path.exists(out_dir):
+    os.makedirs(out_dir)
+out_path=os.path.join(out_dir,ckpt_path.split('/')[-2]+'.pth')
 
 # 定义替换规则（旧字符串 -> 新字符串）
 replace_rules = {

@@ -19,8 +19,6 @@ from .roi_heads import *  # noqa: F401,F403
 from .segmentors import *  # noqa: F401,F403
 from .voxel_encoders import *  # noqa: F401,F403
 from .alocc import *
-from .sparseocc import *
-from .bevformer import *
 from .fbocc_utils import *
 
 __all__ = [

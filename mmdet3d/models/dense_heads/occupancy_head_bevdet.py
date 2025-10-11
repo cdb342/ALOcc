@@ -52,7 +52,7 @@ class OccHead_BEVDet(BaseModule):
         open_occ=False,
         flow_loss_weight=1.,
     ):
-        super(OccHead_gai, self).__init__()
+        super(OccHead_BEVDet, self).__init__()
         self.CE_loss_only=CE_loss_only
         self.Dz=Dz
         self.num_cls=num_cls
@@ -97,7 +97,7 @@ class OccHead_BEVDet(BaseModule):
         self.use_dice_loss = use_dice_loss
         if self.use_dice_loss:
             self.dice_loss = builder.build_loss(dict(type='DiceLoss', loss_weight=2))
-        from mmdet3d.models.alocc.modules.occ_loss_utils import nusc_class_frequencies
+        from mmdet3d.models.alocc.heads.occ_loss_utils import nusc_class_frequencies
         self.nusc_class_frequencies=nusc_class_frequencies
         if open_occ:
             nusc_class_frequencies=nusc_class_frequencies[np.array([4,10,9,3,5,2,6,7,8,1,11,12,13,14,15,16,17])]
