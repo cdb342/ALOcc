@@ -101,7 +101,7 @@ python tools/create_data_bevdet.py
 
 ### 3. Pre-trained Models
 
-For training from scratch, please download pre-trained image backbones from [BEVDet](https://github.com/HuangJunJie2017/BEVDet), [GeoMIM](https://github.com/Sense-X/GeoMIM), or our [Hugging Face Hub](https://huggingface.co/Dobbin/alocc). Place the checkpoint files in the `ckpts/pretrain/` directory.
+For training, please download pre-trained image backbones from [BEVDet](https://github.com/HuangJunJie2017/BEVDet), [GeoMIM](https://github.com/Sense-X/GeoMIM), or our [Hugging Face Hub](https://huggingface.co/Dobbin/OccStudio). Place the checkpoint files in the `ckpts/pretrain/` directory.
 
 ---
 
