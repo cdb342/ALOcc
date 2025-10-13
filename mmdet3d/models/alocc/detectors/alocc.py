@@ -734,20 +734,7 @@ class ALOCC(CenterPoint):
         
             
         return_map['context_before_depth_net']=context
-        if not self.depth_stereo:
-            inputs_=[img[0],*kwargs['aux_cam_params']] if self.training else [img[0],*kwargs['aux_cam_params'][0]]
-            inputs_stereo_=kwargs['adj_aux_cam_params'] if self.training else kwargs['adj_aux_cam_params'][0]
-            imgs, curr2adjsensor = self.prepare_inputs(inputs_,inputs_stereo_)
-            stereo_metas = dict(k2s_sensor=curr2adjsensor,
-                     intrins=img[3],
-                     post_rots=img[4],
-                     post_trans=img[5],
-                    #  frustum=self.cv_frustum.to(stereo_feat.device),
-                     cv_downsample=4,
-                     downsample=self.downsample,
-                     grid_config=self.grid_config)
         
-           
         if self.with_specific_component('depth_net'):
     
             depth_output = self.depth_net(context, cam_params,stereo_metas,img_metas=img_metas,cost_volumn=depth_occ_volumn,**kwargs)

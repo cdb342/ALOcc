@@ -4,6 +4,7 @@
 
 <p align="center">
     <a href="https://arxiv.org/abs/2411.07725" target="_blank"><img alt="arXiv" src="https://img.shields.io/badge/arXiv-2411.07725-b31b1b.svg"></a>
+    <a href="https://opendrivelab.com/challenge2024/" target="_blank"><img alt="CVPR 2024" src="https://img.shields.io/badge/CVPR'24_WAD_Challenge-2nd_Place-brightgreen.svg"></a>
     <a href="https://opensource.org/licenses/Apache-2.0" target="_blank"><img alt="License" src="https://img.shields.io/badge/License-Apache_2.0-blue.svg"></a>
     <a href="https://www.python.org/" target="_blank"><img alt="Python" src="https://img.shields.io/badge/Python-3.8+-orange.svg"></a>
     <a href="https://pytorch.org/" target="_blank"><img alt="PyTorch" src="https://img.shields.io/badge/PyTorch-2.0+-red.svg"></a>
@@ -205,6 +206,13 @@ If you find ALOcc useful for your research or applications, please consider citi
     booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
     month     = {October},
     year      = {2025},
+}
+
+@article{chen2024adaocc,
+  title={AdaOcc: Adaptive Forward View Transformation and Flow Modeling for 3D Occupancy and Flow Prediction},
+  author={Chen, Dubing and Han, Wencheng and Fang, Jin and Shen, Jianbing},
+  journal={arXiv preprint arXiv:2407.01436},
+  year={2024}
 }
 ```
 
