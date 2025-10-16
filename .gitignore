@@ -9,3 +9,5 @@ test
 mmcv
 mmdet3d.egg-info
 map_dict.py
+openocc_training_eval_results
+grad_cam
