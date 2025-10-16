@@ -97,7 +97,7 @@ python tools/nusc_process/extract_sem_point.py
 
 # 2. Create formatted info files for the dataloader
 python tools/create_data.py nuscenes --root-path ./data/nuscenes --out-dir ./data/nuscenes --extra-tag nuscenes
-python tools/create_data_bevdet.py
+PYTHONPATH=$(pwd):$PYTHONPATH python tools/create_data_bevdet.py
 ```
 
 ### 3. Pre-trained Models
@@ -168,7 +168,7 @@ python tools/analysis_tools/get_flops.py configs/alocc/alocc_3d_256x704_bevdet_p
 
 </details>
 
-<details open>
+<details>
 <summary><b>🏆 Performance on Occ3D-nuScenes (trained w/o camera visible mask)</b></summary>
 
 | Model | Backbone | Input Size | mIoU | RayIoU | RayIoU<sub>1m, 2m, 4m</sub> | FPS | Config | Weights |
@@ -176,7 +176,15 @@ python tools/analysis_tools/get_flops.py configs/alocc/alocc_3d_256x704_bevdet_p
 | **ALOcc-2D-mini** | R-50 | 256 × 704 | 33.4 | 39.3 | 32.9, 40.1, 44.8 | 30.5 | [config](./configs/alocc/alocc_2d_mini_r50_256x704_bevdet_preatrain_16f_wo_mask.py) | [HF Hub](https://huggingface.co/Dobbin/OccStudio/blob/main/alocc_2d_mini_r50_256x704_bevdet_preatrain_16f_wo_mask.pth) |
 | **ALOcc-2D** | R-50 | 256 × 704 | 37.4 | 43.0 | 37.1, 43.8, 48.2 | 8.2 | [config](./configs/alocc/alocc_2d_r50_256x704_bevdet_preatrain_16f_wo_mask.py) | [HF Hub](https://huggingface.co/Dobbin/OccStudio/blob/main/alocc_2d_r50_256x704_bevdet_preatrain_16f_wo_mask.pth) |
 | **ALOcc-3D** | R-50 | 256 × 704 | 38.0 | 43.7 | 37.8, 44.7, 48.8 | 6.0 | [config](./configs/alocc/alocc_3d_r50_256x704_bevdet_preatrain_16f_wo_mask.py) | [HF Hub](https://huggingface.co/Dobbin/OccStudio/blob/main/alocc_3d_r50_256x704_bevdet_preatrain_16f_wo_mask.pth) |
+</details>
 
+<details>
+<summary><b>🏆 Performance on OpenOcc (Semantic Occupancy and Flow)</b></summary>
+
+| Method | Backbone | Input Size | Occ Score | mAVE | mAVE<sub>TP</sub> | RayIoU | RayIoU<sub>1m, 2m, 4m</sub> | FPS | Config | Weights |
+|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **ALOcc-Flow-2D** | R-50 | 256 × 704 | 41.9 | 0.530 | 0.431 | 40.3 | 34.3, 41.0, 45.5 | 7.0 | [config](https://huggingface.co/Dobbin/OccStudio/blob/main/alocc_flow_2d_r50_256x704.py) | [HF Hub](https://huggingface.co/Dobbin/OccStudio/blob/main/alocc_flow_2d_r50_256x704.pth) |
+| **ALOcc-Flow-3D** | R-50 | 256 × 704 | 43.1 | 0.549 | 0.458 | 41.9 | 35.6, 42.9, 47.2 | 5.5 | [config](https://huggingface.co/Dobbin/OccStudio/blob/main/alocc_flow_3d_r50_256x704.py) | [HF Hub](https://huggingface.co/Dobbin/OccStudio/blob/main/alocc_flow_3d_r50_256x704.pth) |
 </details>
 
 *For more detailed results and ablations, please refer to our [paper](https://arxiv.org/abs/2411.07725).*

@@ -309,6 +309,7 @@ def main(sem_pred_list, sem_gt_list, flow_pred_list, flow_gt_list, lidar_origin_
     logger = get_root_logger( log_file=os.path.join(log_dirs,'occ_score'), name='mmdet')
     logger.info('--- IoU and AVE metrics ---')
     logger.info(table)
+    logger.info(' --- RayIoU:'+ str((np.nanmean(iou_list[0])+np.nanmean(iou_list[1])+np.nanmean(iou_list[2]))/3))
     logger.info(' --- Occ score:'+ str(occ_score))
 
     torch.cuda.empty_cache()
