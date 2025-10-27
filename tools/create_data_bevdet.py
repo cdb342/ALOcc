@@ -191,11 +191,11 @@ if __name__ == '__main__':
     train_version = VERSION
     root_path = f'./data/{NUSCENES}'
     extra_tag = 'bevdetv2-nuscenes'
-    # nuscenes_data_prep(
-    #     root_path=root_path,
-    #     info_prefix=extra_tag,
-    #     version=train_version,
-    #     max_sweeps=0)
-
+    nuscenes_data_prep(
+        root_path=root_path,
+        info_prefix=extra_tag,
+        version=train_version,
+        max_sweeps=0)
+    
     print('add_ann_infos')
     add_ann_adj_info(extra_tag)

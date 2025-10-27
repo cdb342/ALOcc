@@ -96,10 +96,19 @@ Finally, run the preprocessing scripts to prepare the data for training:
 python tools/nusc_process/extract_sem_point.py
 
 # 2. Create formatted info files for the dataloader
-python tools/create_data.py nuscenes --root-path ./data/nuscenes --out-dir ./data/nuscenes --extra-tag nuscenes
 PYTHONPATH=$(pwd):$PYTHONPATH python tools/create_data_bevdet.py
 ```
-
+Alternatively, you can download the pre-processed [`segmentation labels`](https://huggingface.co/Dobbin/OccStudio/blob/main/lidar_seg.zip), [`train.pkl`](https://huggingface.co/Dobbin/OccStudio/blob/main/bevdetv2-nuscenes_infos_train.pkl) and [`val.pkl`](https://huggingface.co/Dobbin/OccStudio/blob/main/bevdetv2-nuscenes_infos_val.pkl) files from our Hugging Face Hub, and organize their path as:
+```
+ALOcc/
+├── data/
+│   ├── lidar_seg
+│   ├── nuscenes/
+│   │   ├── train.pkl
+│   │   ├── val.pkl
+│   │   ...
+...
+```
 ### 3. Pre-trained Models
 
 For training, please download pre-trained image backbones from [BEVDet](https://github.com/HuangJunJie2017/BEVDet), [GeoMIM](https://github.com/Sense-X/GeoMIM), or our [Hugging Face Hub](https://huggingface.co/Dobbin/OccStudio). Place the checkpoint files in the `ckpts/pretrain/` directory.

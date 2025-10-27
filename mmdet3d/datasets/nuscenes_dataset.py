@@ -493,8 +493,8 @@ class NuScenesDataset(Custom3DDataset):
             sample_idx=info['token'],
             pts_filename=info['lidar_path'],
             sweeps=info['sweeps'],
-            scene_name=info['scene_name'],
-             scene_token=info['scene_token'],
+            
+             
             timestamp=info['timestamp'] / 1e6,
             lidarseg_filename=info.get('lidarseg_filename', 'None') 
         )
@@ -599,8 +599,11 @@ class NuScenesDataset(Custom3DDataset):
                         self.data_infos[index], self.data_infos[index],
                         "ego", "ego"))
                     input_dict['next_occ_gt_path']=None
-                
-        input_dict['occ_gt_path'] = self.data_infos[index]['occ_path']   
+        if not self.test_mode:   
+            input_dict['scene_name']=info['scene_name']
+            input_dict['scene_token']=info['scene_token']
+            input_dict['occ_gt_path'] = self.data_infos[index]['occ_path'] 
+
         if self.openocc:
             input_dict['ray_origin']=self.get_origin(index)     
             scene_frame = self.scene_frames[info['scene_token']]

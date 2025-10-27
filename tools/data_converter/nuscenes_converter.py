@@ -40,6 +40,7 @@ def create_nuscenes_infos(root_path,
         max_sweeps (int, optional): Max number of sweeps.
             Default: 10.
     """
+    import pdb;pdb.set_trace()
     from nuscenes.nuscenes import NuScenes
     nusc = NuScenes(version=version, dataroot=root_path, verbose=True)
     from nuscenes.utils import splits
@@ -93,11 +94,11 @@ def create_nuscenes_infos(root_path,
             len(train_nusc_infos), len(val_nusc_infos)))
         data = dict(infos=train_nusc_infos, metadata=metadata)
         info_path = osp.join(root_path,
-                             '{}_infos_train.pkl'.format(info_prefix))
+                             '{}_infos_train_mini.pkl'.format(info_prefix))
         mmcv.dump(data, info_path)
         data['infos'] = val_nusc_infos
         info_val_path = osp.join(root_path,
-                                 '{}_infos_val.pkl'.format(info_prefix))
+                                 '{}_infos_val_mini.pkl'.format(info_prefix))
         mmcv.dump(data, info_val_path)
 
 
