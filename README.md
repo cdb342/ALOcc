@@ -161,7 +161,36 @@ python tools/analysis_tools/benchmark.py configs/alocc/alocc_3d_256x704_bevdet_p
 # Syntax: python tools/analysis_tools/get_flops.py [CONFIG_FILE] --shape [HEIGHT] [WIDTH]
 python tools/analysis_tools/get_flops.py configs/alocc/alocc_3d_256x704_bevdet_preatrain.py --shape 256 704
 ```
+###  Visualization
 
+First, ensure you have Mayavi installed. You can install it using pip:
+
+```bash
+pip install mayavi
+```
+Before you can visualize the output, you need to run the model on the test set and save the prediction results.
+
+Use the `dist_test.sh` script with the `--save` flag. This will store the model's output in a directory.
+
+```bash
+# Example: Evaluate the ALOcc-3D model and save the predictions
+bash tools/dist_test.sh configs/alocc/alocc_3d_256x704_bevdet_preatrain.py ckpts/alocc_3d_256x704_bevdet_preatrain.pth 8 --save
+```
+
+The prediction results will be saved in the `test/` directory, following a path structure like: `test/[CONFIG_NAME]/[TIMESTAMP]/`.
+
+Once the predictions are saved, you can run the visualization script. This script requires the path to the prediction results and the path to the ground truth data.
+
+```bash
+# Syntax: python tools/visual.py [PREDICTION_PATH] [GROUND_TRUTH_PATH]
+# Example:
+python tools/visual.py work_dirs/alocc_3d_256x704_bevdet_preatrain/xxxxxxxx_xxxxxx/ your/path/to/ground_truth
+```
+
+*   Replace `work_dirs/alocc_3d_256x704_bevdet_preatrain/xxxxxxxx_xxxxxx/` with the actual path to your saved prediction results from Step 2.
+*   Replace `your/path/to/ground_truth` with the path to the corresponding ground truth dataset.
+
+This will launch an interactive Mayavi window where you can inspect and compare the 3D occupancy predictions.
 ---
 
 ## 📊 Results & Model Zoo

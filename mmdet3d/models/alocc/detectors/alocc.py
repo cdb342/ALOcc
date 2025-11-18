@@ -1322,7 +1322,15 @@ class ALOCC(CenterPoint):
         assert len(img_metas) == 1
         if not self.pred_flow:
             pred_flow=None
-      
+
+        if self.occupancy_save_path is not None:
+            scene_name = img_metas[0]['scene_name']
+            sample_token = img_metas[0]['sample_idx']
+            save_dir=os.path.join(self.occupancy_save_path, 'occupancy_pred',scene_name)
+            if not os.path.exists(save_dir):
+                mmcv.mkdir_or_exist(save_dir)
+            save_path = os.path.join(save_dir, f'{sample_token}.npz')
+            np.savez_compressed(save_path,pred_occupancy_category)
         
         if self.cal_metric_in_model:
             
