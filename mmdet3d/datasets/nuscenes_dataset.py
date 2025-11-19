@@ -27,7 +27,12 @@ from mmcv.parallel.data_container import DataContainer
 import copy
 from .rayiou_metrics import main_rayiou, main_raypq
 from .ego_pose_dataset import EgoPoseDatasetOcc3D
-from configs.sparseocc.r50_nuimg_704x256_8f import occ_class_names as occ3d_class_names
+occ_class_names = [
+    'others', 'barrier', 'bicycle', 'bus', 'car', 'construction_vehicle',
+    'motorcycle', 'pedestrian', 'traffic_cone', 'trailer', 'truck',
+    'driveable_surface', 'other_flat', 'sidewalk',
+    'terrain', 'manmade', 'vegetation', 'free'
+]
 
 
 def trans_matrix(T, R):
