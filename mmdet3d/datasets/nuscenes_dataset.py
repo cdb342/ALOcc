@@ -27,7 +27,7 @@ from mmcv.parallel.data_container import DataContainer
 import copy
 from .rayiou_metrics import main_rayiou, main_raypq
 from .ego_pose_dataset import EgoPoseDatasetOcc3D
-occ_class_names = [
+occ3d_class_names = [
     'others', 'barrier', 'bicycle', 'bus', 'car', 'construction_vehicle',
     'motorcycle', 'pedestrian', 'traffic_cone', 'trailer', 'truck',
     'driveable_surface', 'other_flat', 'sidewalk',

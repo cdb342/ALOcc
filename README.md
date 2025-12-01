@@ -1,3 +1,12 @@
+# 📢 Announcement: ALOcc is now integrated into OccStudio!
+
+**ALOcc has been merged into [OccStudio](https://github.com/cdb342/OccStudio).** 
+
+This repository serves as the **official archive** for the original ICCV 2025 paper implementation. 
+For the latest updates, bug fixes, and a more unified framework supporting multiple models, we highly recommend using **OccStudio**.
+
+👉 **Check out the new framework:** [https://github.com/cdb342/OccStudio](https://github.com/cdb342/OccStudio)
+
 <div id="top" align="center">
 
 <h1 align="center"><b>ALOcc:</b> Adaptive Lifting-based 3D Semantic Occupancy and Cost Volume-based Flow Prediction</h1>
